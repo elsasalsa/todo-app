@@ -176,7 +176,17 @@ export default function TodoPage() {
             sx={{ width: 250 }}
           />
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography fontWeight={500}>{user?.fullName || 'User'}</Typography>
+            <Typography
+              fontWeight={500}
+              noWrap
+              sx={{
+                maxWidth: 120,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {user?.fullName || 'User'}
+            </Typography>
             <Box
               onClick={handleClick}
               sx={{

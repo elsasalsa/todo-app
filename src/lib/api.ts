@@ -9,7 +9,6 @@ const instance = axios.create({
   },
 });
 
-// --- Type Definitions ---
 export interface AuthResponse {
   token: string;
   user: {
@@ -24,6 +23,14 @@ export interface Todo {
   id: string;
   item: string;
   isDone: boolean;
+  userId: string;
+  user: User;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  fullName: string;
 }
 
 export interface TodoResponse {
@@ -53,7 +60,7 @@ export const register = async (
 ): Promise<{ message: string }> => {
   try {
     const response = await instance.post('/register', {
-      fullname: fullName,
+      fullName,
       email,
       password,
     });
@@ -82,7 +89,8 @@ export const getTodos = async (
   token: string,
   page: number,
   rows: number,
-  searchFilters?: Record<string, string>
+  searchFilters?: Record<string, string>,
+  filters?: Record<string, any>
 ): Promise<TodoResponse> => {
   const response = await instance.get('/todos', {
     headers: { Authorization: `Bearer ${token}` },
@@ -92,6 +100,7 @@ export const getTodos = async (
       orderKey: 'createdAt',
       orderRule: 'desc',
       ...(searchFilters && { searchFilters: JSON.stringify(searchFilters) }),
+      ...(filters && { filters: JSON.stringify(filters) }),
     },
   });
 
