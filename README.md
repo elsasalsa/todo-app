@@ -54,16 +54,16 @@ NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 ## 📸 Screenshots
 
 ### 📝 Register Page
-![Register Page](screenshots/register.png)
+![Register Page](/public/screenshots/register.png)
 
 ### 🔐 Login Page
-![Login Page](screenshots/login.png)
+![Login Page](/public/screenshots/login.png)
 
 ### ✅ Todo Dashboard
-![Todo Dashboard](screenshots/todo.png)
+![Todo Dashboard](/public/screenshots/todo.png)
 
 ### 🛠️ Admin Panel
-![Admin Panel](screenshots/admin.png)
+![Admin Panel](/public/screenshots/admin.png)
 
 
 🔐 Admin Credentials (for demo)
