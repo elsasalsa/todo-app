@@ -102,12 +102,11 @@ export default function LoginPage() {
           <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
             Sign In
           </Typography>
-          <Typography variant="body2" align="center" mb={3} color="text.secondary">
+          <Typography variant="body2" align="center" mb={1.5} color="text.secondary">
             Just sign in if you have an account here. Enjoy our website.
           </Typography>
 
           <TextField
-            size="small"
             label="Your Email"
             type="email"
             value={email}
@@ -124,7 +123,6 @@ export default function LoginPage() {
           />
 
           <TextField
-            size="small"
             label="Enter Password"
             type={showPassword ? 'text' : 'password'}
             value={password}
