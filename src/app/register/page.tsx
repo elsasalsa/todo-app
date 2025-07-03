@@ -61,7 +61,7 @@ export default function RegisterPage() {
       return;
     }
     const fullName = `${firstName} ${lastName}`.trim();
-    const emailToSend = email.includes('@') ? email : `${email}@squareteam.com`;
+    const emailToSend = email.includes('@') ? email : `${email}@gmail.com`;
     try {
       await register(fullName, emailToSend, password);
       toast.success('Register success!');
