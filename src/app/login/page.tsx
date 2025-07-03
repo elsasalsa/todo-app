@@ -64,9 +64,16 @@ export default function LoginPage() {
         localStorage.removeItem('rememberMe');
       }
       toast.success('Login successful!');
+      const role = res.user.role?.toLowerCase();
+
       setTimeout(() => {
-        window.location.href = '/todo';
-      }, 1500);
+        if (role === 'admin') {
+          window.location.href = '/admin-page';
+        } else {
+          window.location.href = '/todo';
+        }
+      }, 1000);
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -78,75 +85,91 @@ export default function LoginPage() {
 
   return (
     <Container maxWidth="sm" >
-      <Box mt={8} p={4} boxShadow={3} borderRadius={4} bgcolor="#fff">
-        <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
-          Sign In
-        </Typography>
-        <Typography variant="body2" align="center" mb={3} color="text.secondary">
-          Just sign in if you have an account here. Enjoy our website.
-        </Typography>
-
-        <TextField
-          label="Your Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-          margin="normal"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <AccountCircle />
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <TextField
-          label="Enter Password"
-          type={showPassword ? 'text' : 'password'}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          margin="normal"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={1} mb={2}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                color="primary"
-              />
-            }
-            label="Remember me"
-          />
-          <Link href="/forgot-password" underline="hover" variant="body2">
-            Forgot password?
-          </Link>
-        </Box>
-
-        <Button fullWidth variant="contained" onClick={handleLogin} sx={{ fontWeight: 600 }}>
-          Login
-        </Button>
-
-        <Box textAlign="center" mt={3}>
-          <Typography variant="body2">
-            Don’t have an account?{' '}
-            <Link href="/register" underline="hover">
-              Sign up
-            </Link>
+      <Box
+        height="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box
+          width="100%"
+          maxWidth={480}
+          p={5}
+          boxShadow={3}
+          borderRadius={4}
+          bgcolor="#fff"
+        >
+          <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
+            Sign In
           </Typography>
+          <Typography variant="body2" align="center" mb={3} color="text.secondary">
+            Just sign in if you have an account here. Enjoy our website.
+          </Typography>
+
+          <TextField
+            size="small"
+            label="Your Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            size="small"
+            label="Enter Password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Box display="flex" justifyContent="space-between" alignItems="center" mt={1} mb={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Remember me"
+            />
+            <Link href="/forgot-password" underline="hover" variant="body2">
+              Forgot password?
+            </Link>
+          </Box>
+
+          <Button fullWidth variant="contained" onClick={handleLogin} sx={{ fontWeight: 600 }}>
+            Login
+          </Button>
+
+          <Box textAlign="center" mt={3}>
+            <Typography variant="body2">
+              Don’t have an account?{' '}
+              <Link href="/register" underline="hover">
+                Sign up
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Container>
