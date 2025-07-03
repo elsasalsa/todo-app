@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 TodoListify – Nodewave Front End Assessment
 
-## Getting Started
+This is a simple Todo Web Application built with **Next.js** and **TypeScript**, styled using **Material UI (MUI)**. The app connects with the public API provided by Nodewave and supports user authentication and todo management features.
 
-First, run the development server:
+## 🔗 Live Demo
+
+[https://todolistify-ruby.vercel.app]
+
+## 📁 Features
+
+### ✅ Mandatory Features:
+- [x] **Register** (create a new user)
+- [x] **Login** (with JWT authentication)
+- [x] **Get All Todos** (paginated + filtered)
+- [x] **Create New Todo**
+- [x] **Mark Todo as Done / Undone**
+- [x] **Delete Selected Todos**
+
+### 🔍 Optional Features:
+- [x] **Search Todo by Keyword**
+- [x] **Filter Todo by Status**
+- [x] **Admin Page** to:
+  - View all todos from all users
+  - Search and filter by user or status
+  - Paginate through todos
+
+## 💻 Tech Stack
+
+| Tool            | Description                         |
+|-----------------|-------------------------------------|
+| Next.js + TS    | App Framework                       |
+| Material UI     | UI Component Library                |
+| Axios           | HTTP Client                         |
+| jwt-decode      | Decode JWT token                    |
+| Vercel          | Deployment Platform                 |
+
+## 📦 Installation
 
 ```bash
+# Clone the repository
+git clone [https://github.com/elsasalsa/todo-app.git]
+cd todo-app
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+⚙️ Environment Variables
+Create a .env.local file and configure:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+env
+NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+📸 Screenshots
+Register Page
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Login Page
 
-## Learn More
+Todo Dashboard
 
-To learn more about Next.js, take a look at the following resources:
+Admin Panel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🔐 Admin Credentials (for demo)
+Email    : admin@nodewave.id
+Password : admin123
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🚀 Deployment
+The app is deployed on Vercel:
+👉 https://todolistify-ruby.vercel.app
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+👥 Collaborators
+The GitHub repo is private and invited users:
+-rigenski
+-rizqyep
