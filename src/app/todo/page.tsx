@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Checkbox,
-  IconButton,
   Paper,
   Stack,
   TextField,
@@ -20,6 +19,7 @@ import {
   Pagination,
 } from '@mui/material';
 import { Cancel, CheckCircle, Star } from '@mui/icons-material';
+import Fade from '@mui/material/Fade';
 import {
   getTodos,
   createTodo,
@@ -141,15 +141,6 @@ export default function TodoPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteTodoById(id, token);
-      fetchTodos();
-    } catch (error) {
-      console.error('Failed to delete todo:', error);
-    }
-  };
-
   const deleteSelected = async () => {
     try {
       const doneTodos = todos.filter((todo) => todo.isDone);
@@ -205,6 +196,7 @@ export default function TodoPage() {
             </Box>
           </Box>
           <Menu
+            TransitionComponent={Fade}
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
@@ -310,13 +302,13 @@ export default function TodoPage() {
                     {todo.item}
                   </Typography>
                 </Box>
-                <IconButton onClick={() => handleDelete(todo.id)} size="small">
+                <Box>
                   {todo.isDone ? (
                     <CheckCircle sx={{ color: 'green', fontSize: 20 }} />
                   ) : (
                     <Cancel sx={{ color: 'red', fontSize: 20 }} />
                   )}
-                </IconButton>
+                </Box>
               </Box>
             ))}
           </Stack>
