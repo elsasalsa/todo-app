@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import {
   Box,
@@ -78,7 +78,7 @@ export default function TodoPage() {
     window.location.href = '/login';
   };
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     try {
       const savedToken = localStorage.getItem('token');
       if (savedToken) {
@@ -96,12 +96,12 @@ export default function TodoPage() {
     } catch (error) {
       console.error('Failed to fetch todos:', error);
     }
-  };
+  }, [searchTerm, page]);
 
   useEffect(() => {
     setIsClient(true);
     fetchTodos();
-  }, []);
+  }, [fetchTodos]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -109,11 +109,11 @@ export default function TodoPage() {
     }, 500);
 
     return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+  }, [searchTerm, fetchTodos]);
 
   useEffect(() => {
     if (isClient) fetchTodos();
-  }, [page]);
+  }, [page, isClient, fetchTodos]);
 
   if (!isClient) return null;
 

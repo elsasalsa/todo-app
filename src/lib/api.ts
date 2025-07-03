@@ -10,7 +10,7 @@ const instance = axios.create({
 });
 
 // --- Type Definitions ---
-interface AuthResponse {
+export interface AuthResponse {
   token: string;
   user: {
     id: string;
@@ -20,13 +20,13 @@ interface AuthResponse {
   };
 }
 
-interface Todo {
+export interface Todo {
   id: string;
   item: string;
   isDone: boolean;
 }
 
-interface TodoResponse {
+export interface TodoResponse {
   entries: Todo[];
   page: number;
   totalData: number;
@@ -50,7 +50,7 @@ export const register = async (
   fullName: string,
   email: string,
   password: string
-): Promise<any> => {
+): Promise<{ message: string }> => {
   try {
     const response = await instance.post('/register', {
       fullname: fullName,
@@ -60,13 +60,13 @@ export const register = async (
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      throw error.response;
+      throw new Error(error.response?.data?.message || 'Registration failed');
     }
     throw new Error('Registration failed');
   }
 };
 
-export const verifyToken = async (token: string): Promise<any> => {
+export const verifyToken = async (token: string): Promise<{ valid: boolean }> => {
   try {
     const response = await instance.post('/verify-token', { token });
     return response.data;
@@ -114,7 +114,7 @@ export const markTodo = async (
   id: string,
   action: 'DONE' | 'UNDONE',
   token: string
-): Promise<any> => {
+): Promise<{ message: string }> => {
   const res = await instance.put(
     `/todos/${id}/mark`,
     { action },
@@ -126,7 +126,7 @@ export const markTodo = async (
 export const deleteTodoById = async (
   id: string,
   token: string
-): Promise<any> => {
+): Promise<{ message: string }> => {
   const res = await instance.delete(`/todos/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
