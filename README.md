@@ -54,12 +54,16 @@ NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 
 📸 Screenshots
 Register Page
+(screenshots/register.png)
 
 Login Page
+(screenshots/login.png)
 
 Todo Dashboard
+(screenshots/todo.png)
 
 Admin Panel
+(screenshots/admin.png)
 
 🔐 Admin Credentials (for demo)
 Email    : admin@nodewave.id
