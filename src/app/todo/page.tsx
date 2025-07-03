@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import {
   Box,
@@ -13,9 +13,13 @@ import {
   Typography,
   AppBar,
   Toolbar,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  Divider,
+  Pagination,
 } from '@mui/material';
-import { Menu, MenuItem, Divider } from '@mui/material';
-import { Cancel, CheckCircle, Search } from '@mui/icons-material';
+import { Cancel, CheckCircle, Star } from '@mui/icons-material';
 import {
   getTodos,
   createTodo,
@@ -44,6 +48,23 @@ export default function TodoPage() {
   const [isClient, setIsClient] = useState(false);
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === '/') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,27 +78,42 @@ export default function TodoPage() {
     window.location.href = '/login';
   };
 
+  const fetchTodos = async () => {
+    try {
+      const savedToken = localStorage.getItem('token');
+      if (savedToken) {
+        setToken(savedToken);
+
+        const decoded: DecodedToken = jwtDecode(savedToken);
+        setUser(decoded);
+
+        const searchFilters = searchTerm ? { item: searchTerm } : undefined;
+
+        const data = await getTodos(savedToken, page, 5, searchFilters);
+        setTodos(data?.entries || []);
+        setTotalPages(data?.totalPage || 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch todos:', error);
+    }
+  };
 
   useEffect(() => {
     setIsClient(true);
-    const fetchTodos = async () => {
-      try {
-        const savedToken = localStorage.getItem('token');
-        if (savedToken) {
-          setToken(savedToken);
-
-          const decoded: DecodedToken = jwtDecode(savedToken);
-          setUser(decoded);
-
-          const data = await getTodos(savedToken, 1, 5);
-          setTodos(data?.entries || []);
-        }
-      } catch (error) {
-        console.error('Failed to fetch todos:', error);
-      }
-    };
     fetchTodos();
   }, []);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchTodos();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (isClient) fetchTodos();
+  }, [page]);
 
   if (!isClient) return null;
 
@@ -86,8 +122,7 @@ export default function TodoPage() {
     try {
       await createTodo(input, token);
       setInput('');
-      const data = await getTodos(token, 1, 5);
-      setTodos(data?.entries || []);
+      fetchTodos();
     } catch (error) {
       console.error('Failed to add todo:', error);
     }
@@ -109,8 +144,7 @@ export default function TodoPage() {
   const handleDelete = async (id: string) => {
     try {
       await deleteTodoById(id, token);
-      const data = await getTodos(token, 1, 5);
-      setTodos(data?.entries || []);
+      fetchTodos();
     } catch (error) {
       console.error('Failed to delete todo:', error);
     }
@@ -120,8 +154,7 @@ export default function TodoPage() {
     try {
       const doneTodos = todos.filter((todo) => todo.isDone);
       await Promise.all(doneTodos.map((todo) => deleteTodoById(todo.id, token)));
-      const data = await getTodos(token, 1, 5);
-      setTodos(data?.entries || []);
+      fetchTodos();
     } catch (error) {
       console.error('Failed to delete selected todos:', error);
     }
@@ -131,9 +164,26 @@ export default function TodoPage() {
     <Box minHeight="100vh" bgcolor="#f8f9fb" fontFamily="sans-serif">
       <AppBar position="static" elevation={0} sx={{ bgcolor: '#fff', color: '#000', borderBottom: '1px solid #ddd' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <IconButton>
-            <Search />
-          </IconButton>
+          <TextField
+            inputRef={searchRef}
+            placeholder="Search (Ctrl+/)"
+            variant="standard"
+            value={searchTerm}
+            onChange={(e) => {
+              setPage(1);
+              setSearchTerm(e.target.value);
+            }}
+            InputProps={{
+              disableUnderline: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Star sx={{ color: '#9ca3af' }} />
+                </InputAdornment>
+              ),
+              sx: { fontSize: '0.9rem', color: '#9ca3af' },
+            }}
+            sx={{ width: 250 }}
+          />
           <Box display="flex" alignItems="center" gap={1}>
             <Typography fontWeight={500}>{user?.fullName || 'User'}</Typography>
             <Box
@@ -184,23 +234,15 @@ export default function TodoPage() {
               </Typography>
             </Box>
             <Divider />
-
-            <MenuItem
-              onClick={handleLogout}
-              sx={{
-                justifyContent: 'center',
-                fontWeight: 500,
-              }}
-            >
+            <MenuItem onClick={handleLogout} sx={{ justifyContent: 'center', fontWeight: 500 }}>
               Logout
             </MenuItem>
           </Menu>
-
         </Toolbar>
       </AppBar>
 
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={6} px={2}>
-        <Typography variant="h5" fontWeight={700} color="#2a3c65" mb={2}>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={4} px={2}>
+        <Typography variant="h4" fontWeight={700} color="#2a3c65" mb={1}>
           To Do
         </Typography>
 
@@ -208,8 +250,8 @@ export default function TodoPage() {
           elevation={2}
           sx={{
             width: '100%',
-            maxWidth: 500,
-            p: 3,
+            maxWidth: 600,
+            p: 4,
             borderRadius: 3,
             backgroundColor: '#fff',
           }}
@@ -279,7 +321,7 @@ export default function TodoPage() {
             ))}
           </Stack>
 
-          <Box mt={3}>
+          <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
             <Button
               variant="contained"
               sx={{
@@ -295,6 +337,17 @@ export default function TodoPage() {
             >
               Delete Selected
             </Button>
+
+            {totalPages > 1 && (
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={(_, value) => setPage(value)}
+                color="primary"
+                shape="rounded"
+                size="small"
+              />
+            )}
           </Box>
         </Paper>
       </Box>
