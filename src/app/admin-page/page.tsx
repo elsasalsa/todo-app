@@ -40,6 +40,7 @@ export default function AdminPage() {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [searchKey, setSearchKey] = useState('');
     const [user, setUser] = useState<DecodedToken | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -65,32 +66,39 @@ export default function AdminPage() {
 
         const decoded: DecodedToken = jwtDecode(token);
         setUser(decoded);
+    }, []);
 
-        fetchTodos(token);
-    }, [page, statusFilter]);
-
-    const fetchTodos = async (token: string) => {
-        try {
-            const filters: Record<string, any> = {};
-            if (statusFilter) {
-                filters.isDone = statusFilter === 'Success';
-            }
-
-            const searchFilters = searchTerm ? { item: searchTerm } : undefined;
-
-            const data = await getTodos(token, page, 5, searchFilters, filters);
-            setTodos(data.entries);
-            setTotalPages(data.totalPage);
-        } catch (error) {
-            console.error('Failed to fetch todos:', error);
-        }
-    };
-
-    const handleSearch = () => {
+    useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) return;
+
+        const fetchTodos = async () => {
+            try {
+                const filters: Record<string, string | number | boolean> = {};
+                if (statusFilter) {
+                    filters.isDone = statusFilter === 'Success';
+                }
+
+                const searchFilters =
+                    searchKey !== ''
+                        ? { item: searchKey, 'user.fullName': searchKey }
+                        : undefined;
+
+                const data = await getTodos(token, page, 5, searchFilters, filters);
+                setTodos(data.entries);
+                setTotalPages(data.totalPage);
+            } catch (error) {
+                console.error('Failed to fetch todos:', error);
+            }
+        };
+
+        fetchTodos();
+    }, [page, statusFilter, searchKey]);
+
+
+    const handleSearch = () => {
         setPage(1);
-        fetchTodos(token);
+        setSearchKey(searchTerm.trim());
     };
 
     if (!isClient) return null;
@@ -171,8 +179,12 @@ export default function AdminPage() {
                         <Box />
                     )}
 
-                    <Box display="flex" alignItems="center" gap={2}>
-                        <Typography fontWeight={500} color="#374151">
+                    <Box display="flex" alignItems="center" gap={2} minWidth={0}>
+                        <Typography
+                            fontWeight={500}
+                            color="#374151"
+                            sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 120 }}
+                        >
                             {user?.fullName || ''}
                         </Typography>
                         <Box
@@ -233,7 +245,7 @@ export default function AdminPage() {
 
                 {/* Page Content */}
                 <Box px={4} py={3}>
-                    <Typography variant="h5" fontWeight={600} mb={2}>
+                    <Typography variant="h5" fontWeight={600}>
                         To Do
                     </Typography>
 
