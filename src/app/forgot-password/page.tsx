@@ -27,8 +27,7 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    // Simulasi: Belum ada fitur backend
-    toast('Fitur belum tersedia. Silakan hubungi admin.', {
+    toast('This feature is not available yet. Please contact admin.', {
       icon: 'ℹ️',
     });
   };

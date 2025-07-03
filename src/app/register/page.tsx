@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
   Box,
@@ -15,9 +16,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { register } from '@/lib/api';
 import Link from 'next/link';
-import toast from 'react-hot-toast'; // ✅ Pake toast
+import toast from 'react-hot-toast'; 
 
-const RegisterPage = () => {
+export default function RegisterPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -31,6 +33,14 @@ const RegisterPage = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      toast('You are logged in!', { icon: 'ℹ️' });
+      router.replace('/todo');
+    }
+  }, [router]);
+
+  useEffect(() => {
     setIsClient(true);
   }, []);
 
@@ -41,33 +51,17 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async () => {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-      about,
-    } = form;
-
-    // Validasi input kosong
+    const { firstName, lastName, email, password, confirmPassword, about } = form;
     if (!firstName || !lastName || !email || !password || !confirmPassword || !about) {
       toast.error('Please fill in all the fields');
       return;
     }
-
-    // Validasi password cocok
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
-
-    // Gabungkan nama
     const fullName = `${firstName} ${lastName}`.trim();
-
-    // Tambahkan domain jika tidak ada "@"
     const emailToSend = email.includes('@') ? email : `${email}@squareteam.com`;
-
     try {
       await register(fullName, emailToSend, password);
       toast.success('Register success!');
@@ -200,6 +194,4 @@ const RegisterPage = () => {
       </Box>
     </Container>
   );
-};
-
-export default RegisterPage;
+}

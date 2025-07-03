@@ -9,7 +9,6 @@ const instance = axios.create({
   },
 });
 
-// ===================== AUTH =====================
 
 export const login = async (email: string, password: string) => {
   const response = await instance.post('/login', {
@@ -47,9 +46,13 @@ export const verifyToken = async (token: string) => {
   }
 };
 
-// ===================== TODO =====================
 
-export const getTodos = async (token: string, page: number, rows: number) => {
+export const getTodos = async (
+  token: string,
+  page: number,
+  rows: number,
+  searchFilters?: Record<string, any>
+) => {
   const response = await instance.get('/todos', {
     headers: { Authorization: `Bearer ${token}` },
     params: {
@@ -57,6 +60,7 @@ export const getTodos = async (token: string, page: number, rows: number) => {
       rows,
       orderKey: 'createdAt',
       orderRule: 'desc',
+      ...(searchFilters && { searchFilters: JSON.stringify(searchFilters) }),
     },
   });
 
