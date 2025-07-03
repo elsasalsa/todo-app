@@ -54,16 +54,16 @@ NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 ## 📸 Screenshots
 
 ### 📝 Register Page  
-![Register Page](https://github.com/elsasalsa/todo-app/blob/main/screenshots/register.png?raw=true)
+![alt text](https://github.com/elsasalsa/todo-app/blob/main/public/screenshots/register.png?raw=true)
 
 ### 🔐 Login Page  
-![Login Page](https://github.com/elsasalsa/todo-app/blob/main/screenshots/login.png?raw=true)
+![alt text](https://github.com/elsasalsa/todo-app/blob/main/public/screenshots/login.png?raw=true)
 
 ### ✅ Todo Dashboard  
-![Todo Dashboard](https://github.com/elsasalsa/todo-app/blob/main/screenshots/todo.png?raw=true)
+![alt text](https://github.com/elsasalsa/todo-app/blob/main/public/screenshots/todo.png?raw=true)
 
 ### 🛠️ Admin Panel
-![Admin Panel](https://github.com/elsasalsa/todo-app/blob/main/screenshots/admin.png?raw=true)
+![alt text](https://github.com/elsasalsa/todo-app/blob/main/public/screenshots/admin.png?raw=true)
 
 
 🔐 Admin Credentials (for demo)
