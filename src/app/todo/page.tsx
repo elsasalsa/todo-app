@@ -17,6 +17,8 @@ import {
   MenuItem,
   Divider,
   Pagination,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { Cancel, CheckCircle, Star } from '@mui/icons-material';
 import Fade from '@mui/material/Fade';
@@ -51,6 +53,10 @@ export default function TodoPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'warning'>('success');
+
 
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -118,15 +124,28 @@ export default function TodoPage() {
   if (!isClient) return null;
 
   const handleAdd = async () => {
-    if (!input.trim()) return;
-    try {
-      await createTodo(input, token);
-      setInput('');
-      fetchTodos();
-    } catch (error) {
-      console.error('Failed to add todo:', error);
-    }
-  };
+  if (!input.trim()) {
+    setSnackbarMessage('Task cannot be empty!');
+    setSnackbarSeverity('warning');
+    setOpenSnackbar(true);
+    return;
+  }
+
+  try {
+    await createTodo(input, token);
+    setInput('');
+    fetchTodos();
+
+    setSnackbarMessage('Todo added successfully!');
+    setSnackbarSeverity('success');
+    setOpenSnackbar(true);
+  } catch (error) {
+    console.error('Failed to add todo:', error);
+    setSnackbarMessage('Failed to add todo');
+    setSnackbarSeverity('error');
+    setOpenSnackbar(true);
+  }
+};
 
   const toggleDone = async (id: string, isDone: boolean) => {
     try {
@@ -142,12 +161,29 @@ export default function TodoPage() {
   };
 
   const deleteSelected = async () => {
+    const doneTodos = todos.filter((todo) => todo.isDone);
+    if (doneTodos.length === 0) {
+      setSnackbarMessage('No completed todos to delete');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+      return;
+    }
+
+    const confirm = window.confirm(`Are you sure you want to delete ${doneTodos.length} completed todo(s)?`);
+    if (!confirm) return;
+
     try {
-      const doneTodos = todos.filter((todo) => todo.isDone);
       await Promise.all(doneTodos.map((todo) => deleteTodoById(todo.id, token)));
       fetchTodos();
+
+      setSnackbarMessage('Completed todos deleted successfully');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
     } catch (error) {
       console.error('Failed to delete selected todos:', error);
+      setSnackbarMessage('Failed to delete todos');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
   };
 
@@ -321,7 +357,7 @@ export default function TodoPage() {
                   backgroundColor: '#0d6efd',
                   textTransform: 'none',
                   minWidth: 100,
-                  fontSize: '0.75rem',
+                  fontSize: '0.85rem',
                   fontWeight: 500,
                   height: '30px',
                   lineHeight: '1',
@@ -391,6 +427,20 @@ export default function TodoPage() {
               >
                 Delete Selected
               </Button>
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSnackbar(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              >
+                <Alert
+                  onClose={() => setOpenSnackbar(false)}
+                  severity={snackbarSeverity}
+                  sx={{ width: '100%' }}
+                >
+                  {snackbarMessage}
+                </Alert>
+              </Snackbar>
 
               {totalPages > 1 && (
                 <Pagination

@@ -282,7 +282,7 @@ export default function AdminPage() {
                                     fontSize: '0.85rem',
                                     lineHeight: 1,
                                     textTransform: 'none',
-                                    minWidth: 100,
+                                    minWidth: 70,
                                     fontWeight: 500,
                                     height: '30px',
                                     mt: 2,
@@ -299,7 +299,7 @@ export default function AdminPage() {
                                 label="Filter by Status"
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                sx={{ minWidth: 160, mr: 1, ml: 2 }}
+                                sx={{ minWidth: 160, mr: 1, ml: 4 }}
                                 InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
                             >
                                 <MenuItem value="">All</MenuItem>
