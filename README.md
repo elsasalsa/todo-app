@@ -46,24 +46,25 @@ npm install
 
 # Run the development server
 npm run dev
+
 ⚙️ Environment Variables
 Create a .env.local file and configure:
-
-env
 NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 
-📸 Screenshots
-Register Page
-(screenshots/register.png)
+## 📸 Screenshots
 
-Login Page
-(screenshots/login.png)
+### 📝 Register Page
+![Register Page](screenshots/register.png)
 
-Todo Dashboard
-(screenshots/todo.png)
+### 🔐 Login Page
+![Login Page](screenshots/login.png)
 
-Admin Panel
-(screenshots/admin.png)
+### ✅ Todo Dashboard
+![Todo Dashboard](screenshots/todo.png)
+
+### 🛠️ Admin Panel
+![Admin Panel](screenshots/admin.png)
+
 
 🔐 Admin Credentials (for demo)
 Email    : admin@nodewave.id
