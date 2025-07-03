@@ -94,7 +94,7 @@ export default function LoginPage() {
         <Box
           width="100%"
           maxWidth={480}
-          p={5}
+          p={4}
           boxShadow={3}
           borderRadius={4}
           bgcolor="#fff"

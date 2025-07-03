@@ -152,207 +152,261 @@ export default function TodoPage() {
   };
 
   return (
-    <Box minHeight="100vh" bgcolor="#f8f9fb" fontFamily="sans-serif">
-      <AppBar position="static" elevation={0} sx={{ bgcolor: '#fff', color: '#000', borderBottom: '1px solid #ddd' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <TextField
-            inputRef={searchRef}
-            placeholder="Search (Ctrl+/)"
-            variant="standard"
-            value={searchTerm}
-            onChange={(e) => {
-              setPage(1);
-              setSearchTerm(e.target.value);
-            }}
-            InputProps={{
-              disableUnderline: true,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Star sx={{ color: '#9ca3af' }} />
-                </InputAdornment>
-              ),
-              sx: { fontSize: '0.9rem', color: '#9ca3af' },
-            }}
-            sx={{ width: 250 }}
-          />
-          <Box display="flex" alignItems="center" gap={1}>
-            <Typography
-              fontWeight={500}
-              noWrap
-              sx={{
-                maxWidth: 120,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+    <Box
+      position="relative"
+      minHeight="100vh"
+      fontFamily="sans-serif"
+      sx={{
+        backgroundColor: '#f1f1f1',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '300px',
+          backgroundColor: '#ffffff',
+          zIndex: 0,
+          clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
+        }}
+      />
+
+      {/* Konten utama */}
+      <Box position="relative" zIndex={1}>
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            bgcolor: '#fff',
+            color: '#000',
+            borderBottom: '1px solid #ddd',
+          }}
+        >
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              inputRef={searchRef}
+              placeholder="Search (Ctrl+/)"
+              variant="standard"
+              value={searchTerm}
+              onChange={(e) => {
+                setPage(1);
+                setSearchTerm(e.target.value);
               }}
-            >
-              {user?.fullName || 'User'}
-            </Typography>
-            <Box
-              onClick={handleClick}
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                bgcolor: '#d0d5dd',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
+              InputProps={{
+                disableUnderline: true,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Star sx={{ color: '#9ca3af' }} />
+                  </InputAdornment>
+                ),
+                sx: { fontSize: '0.9rem', color: '#9ca3af' },
               }}
-            >
-              <Typography fontSize={16} fontWeight={700}>
-                {user?.fullName?.charAt(0) || ''}
-              </Typography>
-            </Box>
-          </Box>
-          <Menu
-            TransitionComponent={Fade}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          >
-            <Box px={2} py={2} display="flex" flexDirection="column" alignItems="center">
-              <Box
+              sx={{ width: 250 }}
+            />
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography
+                fontWeight={500}
+                noWrap
                 sx={{
-                  width: 40,
-                  height: 40,
+                  maxWidth: 120,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {user?.fullName || 'User'}
+              </Typography>
+              <Box
+                onClick={handleClick}
+                sx={{
+                  width: 32,
+                  height: 32,
                   borderRadius: '50%',
                   bgcolor: '#d0d5dd',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginBottom: '8px',
+                  cursor: 'pointer',
                 }}
               >
-                <Typography fontSize={18} fontWeight={700}>
+                <Typography fontSize={16} fontWeight={700}>
                   {user?.fullName?.charAt(0) || ''}
                 </Typography>
               </Box>
-              <Typography fontWeight={600}>{user?.fullName}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {user?.email}
-              </Typography>
             </Box>
-            <Divider />
-            <MenuItem onClick={handleLogout} sx={{ justifyContent: 'center', fontWeight: 500 }}>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={4} px={2}>
-        <Typography variant="h4" fontWeight={700} color="#2a3c65" mb={1}>
-          To Do
-        </Typography>
-
-        <Paper
-          elevation={2}
-          sx={{
-            width: '100%',
-            maxWidth: 600,
-            p: 4,
-            borderRadius: 3,
-            backgroundColor: '#fff',
-          }}
-        >
-          <Box display="flex" gap={1.5} mb={2} alignItems="flex-end">
-            <TextField
-              label="Add a new task"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              fullWidth
-              variant="standard"
-              InputProps={{ style: { fontWeight: 500 } }}
-            />
-            <Button
-              variant="contained"
-              size="small"
-              sx={{
-                backgroundColor: '#0d6efd',
-                textTransform: 'none',
-                minWidth: 100,
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                height: '30px',
-                lineHeight: '1',
-              }}
-              onClick={handleAdd}
+            <Menu
+              TransitionComponent={Fade}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-              Add Todo
-            </Button>
-          </Box>
-
-          <Stack spacing={1.5}>
-            {todos.map((todo) => (
               <Box
-                key={todo.id}
+                px={2}
+                py={2}
                 display="flex"
-                justifyContent="space-between"
+                flexDirection="column"
                 alignItems="center"
-                borderBottom="1px solid #ddd"
-                pb={0.5}
               >
-                <Box display="flex" alignItems="center">
-                  <Checkbox
-                    checked={todo.isDone}
-                    onChange={() => toggleDone(todo.id, todo.isDone)}
-                    size="small"
-                  />
-                  <Typography
-                    variant="body2"
-                    fontWeight={500}
-                    sx={{
-                      textDecoration: todo.isDone ? 'line-through' : 'none',
-                      color: todo.isDone ? 'gray' : '#000',
-                    }}
-                  >
-                    {todo.item}
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    bgcolor: '#d0d5dd',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '8px',
+                  }}
+                >
+                  <Typography fontSize={18} fontWeight={700}>
+                    {user?.fullName?.charAt(0) || ''}
                   </Typography>
                 </Box>
-                <Box>
-                  {todo.isDone ? (
-                    <CheckCircle sx={{ color: 'green', fontSize: 20 }} />
-                  ) : (
-                    <Cancel sx={{ color: 'red', fontSize: 20 }} />
-                  )}
-                </Box>
+                <Typography fontWeight={600}>{user?.fullName}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {user?.email}
+                </Typography>
               </Box>
-            ))}
-          </Stack>
+              <Divider />
+              <MenuItem
+                onClick={handleLogout}
+                sx={{ justifyContent: 'center', fontWeight: 500 }}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </Toolbar>
+        </AppBar>
 
-          <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#ff4d4f',
-                textTransform: 'none',
-                fontWeight: 500,
-                fontSize: '0.875rem',
-                px: 2,
-                py: 0.5,
-                '&:hover': { backgroundColor: '#ff7875' },
-              }}
-              onClick={deleteSelected}
-            >
-              Delete Selected
-            </Button>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          mt={4}
+          px={2}
+        >
+          <Typography variant="h4" fontWeight={700} color="#2a3c65" mb={1}>
+            To Do
+          </Typography>
 
-            {totalPages > 1 && (
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={(_, value) => setPage(value)}
-                color="primary"
-                shape="rounded"
-                size="small"
+          <Paper
+            elevation={2}
+            sx={{
+              width: '100%',
+              maxWidth: 600,
+              p: 4,
+              borderRadius: 3,
+              backgroundColor: '#fff',
+            }}
+          >
+            <Box display="flex" gap={1.5} mb={2} alignItems="flex-end">
+              <TextField
+                label="Add a new task"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                fullWidth
+                variant="standard"
+                InputProps={{ style: { fontWeight: 500 } }}
               />
-            )}
-          </Box>
-        </Paper>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{
+                  backgroundColor: '#0d6efd',
+                  textTransform: 'none',
+                  minWidth: 100,
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  height: '30px',
+                  lineHeight: '1',
+                }}
+                onClick={handleAdd}
+              >
+                Add Todo
+              </Button>
+            </Box>
+
+            <Stack spacing={1.5}>
+              {todos.map((todo) => (
+                <Box
+                  key={todo.id}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom="1px solid #ddd"
+                  pb={0.5}
+                >
+                  <Box display="flex" alignItems="center">
+                    <Checkbox
+                      checked={todo.isDone}
+                      onChange={() => toggleDone(todo.id, todo.isDone)}
+                      size="small"
+                    />
+                    <Typography
+                      variant="body2"
+                      fontWeight={500}
+                      sx={{
+                        textDecoration: todo.isDone ? 'line-through' : 'none',
+                        color: todo.isDone ? 'gray' : '#000',
+                      }}
+                    >
+                      {todo.item}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    {todo.isDone ? (
+                      <CheckCircle sx={{ color: 'green', fontSize: 20 }} />
+                    ) : (
+                      <Cancel sx={{ color: 'red', fontSize: 20 }} />
+                    )}
+                  </Box>
+                </Box>
+              ))}
+            </Stack>
+
+            <Box
+              mt={3}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: '#ff4d4f',
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  fontSize: '0.875rem',
+                  px: 2,
+                  py: 0.5,
+                  '&:hover': { backgroundColor: '#ff7875' },
+                }}
+                onClick={deleteSelected}
+              >
+                Delete Selected
+              </Button>
+
+              {totalPages > 1 && (
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={(_, value) => setPage(value)}
+                  color="primary"
+                  shape="rounded"
+                  size="small"
+                />
+              )}
+            </Box>
+          </Paper>
+        </Box>
       </Box>
     </Box>
   );
+
 }

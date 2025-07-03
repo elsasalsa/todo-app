@@ -102,7 +102,7 @@ export default function RegisterPage() {
             Register
           </Typography>
           <Typography variant="body2" align="center" mb={3} color="text.secondary">
-            Let’s Sign up first for enter into Square Website. Uh She Up!
+            Let’s sign up first to get started with Todolistify. Uh She Up!
           </Typography>
 
           <Box component="form" display="flex" flexDirection="column" gap={2}>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">@squareteam.com</InputAdornment>
+                  <InputAdornment position="end">@gmail.com</InputAdornment>
                 ),
               }}
             />

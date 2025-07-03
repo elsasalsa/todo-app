@@ -250,16 +250,25 @@ export default function AdminPage() {
                     </Typography>
 
                     <Box component={Paper} elevation={0} sx={{ p: 3, borderRadius: 3 }}>
-                        <Box display="flex" gap={2} mb={3} alignItems="flex-start">
+                        <Box
+                            display="flex"
+                            flexDirection={{ xs: 'column', sm: 'row' }}
+                            mb={2}
+                            alignItems={{ xs: 'stretch', sm: 'flex-start' }}
+                        >
                             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                 <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                 <TextField
+                                    fullWidth
                                     variant="standard"
                                     size="small"
                                     label="Search"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
+                                    sx={{
+                                        mr: 1
+                                    }}
                                 />
                             </Box>
 
@@ -273,10 +282,11 @@ export default function AdminPage() {
                                     fontSize: '0.85rem',
                                     lineHeight: 1,
                                     textTransform: 'none',
-                                    minWidth: 75,
+                                    minWidth: 100,
                                     fontWeight: 500,
                                     height: '30px',
                                     mt: 2,
+                                    mr: 1
                                 }}
                             >
                                 Search
@@ -289,7 +299,7 @@ export default function AdminPage() {
                                 label="Filter by Status"
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                sx={{ minWidth: 160 }}
+                                sx={{ minWidth: 160, mr: 1, ml: 2 }}
                                 InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
                             >
                                 <MenuItem value="">All</MenuItem>
