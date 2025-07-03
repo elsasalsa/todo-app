@@ -90,7 +90,7 @@ export const getTodos = async (
   page: number,
   rows: number,
   searchFilters?: Record<string, string>,
-  filters?: Record<string, any>
+  filters?: Record<string, string | number | boolean>
 ): Promise<TodoResponse> => {
   const response = await instance.get('/todos', {
     headers: { Authorization: `Bearer ${token}` },
