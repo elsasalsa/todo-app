@@ -33,6 +33,9 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [country, setCountry] = useState('ID');
+  const [phoneError, setPhoneError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -95,6 +98,36 @@ export default function RegisterPage() {
     }
   };
 
+  const validatePhoneNumber = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length < 5) {
+      setPhoneError('Min. 8 digits');
+    } else if (digits.length > 12) {
+      setPhoneError('Max. 15 digits');
+    } else {
+      setPhoneError('');
+    }
+    setPhoneNumber(value);
+  };
+
+  const countryCodes: { [key: string]: { name: string; code: string } } = {
+    ID: { name: 'Indonesia', code: '+62' },
+    MY: { name: 'Malaysia', code: '+60' },
+    SG: { name: 'Singapore', code: '+65' },
+    US: { name: 'United States', code: '+1' },
+    GB: { name: 'United Kingdom', code: '+44' },
+    AU: { name: 'Australia', code: '+61' },
+    CA: { name: 'Canada', code: '+1' },
+    IN: { name: 'India', code: '+91' },
+    JP: { name: 'Japan', code: '+81' },
+    CN: { name: 'China', code: '+86' },
+    DE: { name: 'Germany', code: '+49' },
+    FR: { name: 'France', code: '+33' },
+    BR: { name: 'Brazil', code: '+55' },
+    ZA: { name: 'South Africa', code: '+27' },
+    KR: { name: 'South Korea', code: '+82' },
+  };
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -119,7 +152,8 @@ export default function RegisterPage() {
           </Typography>
 
           <Box component="form" display="flex" flexDirection="column" gap={2}>
-            <Box display="flex" gap={2}>
+            {/* First and Last Name */}
+            <Box display="flex" gap={1}>
               <TextField
                 size="small"
                 label="First Name"
@@ -138,6 +172,42 @@ export default function RegisterPage() {
               />
             </Box>
 
+            {/* Phone Input */}
+            <Box display="flex" gap={1} flexWrap="wrap">
+              <TextField
+                size="small"
+                label=""
+                value={countryCodes[country].code}
+                sx={{ width: 60 }}
+                InputProps={{ readOnly: true }}
+              />
+              <TextField
+                size="small"
+                label="Phone Number"
+                value={phoneNumber}
+                onChange={(e) => validatePhoneNumber(e.target.value)}
+                sx={{ width: 220 }}
+                error={!!phoneError}
+                helperText={phoneError}
+              />
+              <TextField
+                select
+                size="small"
+                label="Your Country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                SelectProps={{ native: true }}
+                sx={{ width: 120 }}
+              >
+                {Object.entries(countryCodes).map(([key, val]) => (
+                  <option key={key} value={key}>
+                    {val.name}
+                  </option>
+                ))}
+              </TextField>
+            </Box>
+            
+            {/* Email */}
             <TextField
               size="small"
               label="Mail Address"
@@ -152,7 +222,8 @@ export default function RegisterPage() {
               }}
             />
 
-            <Box display="flex" gap={2}>
+            {/* Password & Confirm */}
+            <Box display="flex" gap={1}>
               <TextField
                 size="small"
                 label="Password"
@@ -191,6 +262,7 @@ export default function RegisterPage() {
               />
             </Box>
 
+            {/* About */}
             <TextField
               label="Tell us about yourself"
               name="about"
@@ -202,6 +274,7 @@ export default function RegisterPage() {
               onChange={handleChange}
             />
 
+            {/* Buttons */}
             <Box display="flex" gap={2}>
               <Button
                 fullWidth
