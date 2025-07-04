@@ -18,6 +18,7 @@ import {
     Menu,
     MenuItem,
     Divider,
+    CircularProgress
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -37,6 +38,7 @@ export default function AdminPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [searchKey, setSearchKey] = useState('');
+    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<DecodedToken | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -96,6 +98,7 @@ export default function AdminPage() {
 
         const fetchTodos = async () => {
             try {
+                setLoading(true);
                 const filters: Record<string, string | number | boolean> = {};
                 if (statusFilter) {
                     filters.isDone = statusFilter === 'Success';
@@ -111,8 +114,11 @@ export default function AdminPage() {
                 setTotalPages(data.totalPage);
             } catch (error) {
                 console.error('Failed to fetch todos:', error);
+            } finally {
+                setLoading(false);
             }
         };
+
 
         fetchTodos();
     }, [page, statusFilter, searchKey]);
@@ -127,7 +133,6 @@ export default function AdminPage() {
 
     return (
         <Box display="flex" height="100vh">
-            {/* Sidebar */}
             {isSidebarOpen && (
                 <Box
                     width="220px"
@@ -266,8 +271,8 @@ export default function AdminPage() {
                 </Box>
 
                 {/* Page Content */}
-                <Box px={{ xs: 3, sm: 4 }} py={3}>
-                    <Typography variant="h4" fontWeight={600} mb={2}>
+                <Box px={{ xs: 3, sm: 4 }} py={3} mt={1.5}>
+                    <Typography variant="h4" fontWeight={600} mb={2.5}>
                         To Do
                     </Typography>
 
@@ -356,27 +361,44 @@ export default function AdminPage() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {todos.map((row) => (
-                                        <TableRow key={row.id}>
-                                            <TableCell>{row.user.fullName}</TableCell>
-                                            <TableCell>{row.item}</TableCell>
-                                            <TableCell>
-                                                <Box
-                                                    px={2}
-                                                    py={0.5}
-                                                    borderRadius={8}
-                                                    fontSize={12}
-                                                    fontWeight={600}
-                                                    display="inline-block"
-                                                    color="#fff"
-                                                    bgcolor={row.isDone ? '#22c55e' : '#f87171'}
-                                                >
-                                                    {row.isDone ? 'Success' : 'Pending'}
+                                    {loading ? (
+                                        <TableRow>
+                                            <TableCell colSpan={3} align="center">
+                                                <Box py={3}>
+                                                    <CircularProgress />
                                                 </Box>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    ) : todos.length > 0 ? (
+                                        todos.map((row) => (
+                                            <TableRow key={row.id}>
+                                                <TableCell>{row.user.fullName}</TableCell>
+                                                <TableCell>{row.item}</TableCell>
+                                                <TableCell>
+                                                    <Box
+                                                        px={2}
+                                                        py={0.5}
+                                                        borderRadius={8}
+                                                        fontSize={12}
+                                                        fontWeight={600}
+                                                        display="inline-block"
+                                                        color="#fff"
+                                                        bgcolor={row.isDone ? '#22c55e' : '#f87171'}
+                                                    >
+                                                        {row.isDone ? 'Success' : 'Pending'}
+                                                    </Box>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={3} align="center">
+                                                No data found.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
                                 </TableBody>
+
                             </Table>
                         </TableContainer>
 

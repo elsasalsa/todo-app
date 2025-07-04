@@ -19,7 +19,8 @@ import {
   Divider,
   Pagination,
   Snackbar,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { Cancel, CheckCircle, Star } from '@mui/icons-material';
 import Fade from '@mui/material/Fade';
@@ -45,6 +46,7 @@ export default function UserPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(true);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'warning'>('success');
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -102,6 +104,7 @@ export default function UserPage() {
 
   const fetchTodos = useCallback(async () => {
     try {
+      setLoading(true);
       const savedToken = localStorage.getItem('token');
       if (savedToken) {
         setToken(savedToken);
@@ -117,6 +120,8 @@ export default function UserPage() {
       }
     } catch (error) {
       console.error('Failed to fetch todos:', error);
+    } finally {
+      setLoading(false);
     }
   }, [searchTerm, page]);
 
@@ -357,120 +362,130 @@ export default function UserPage() {
               p: 4,
               borderRadius: 3,
               backgroundColor: '#fff',
+              minHeight: 200,
+              alignItems: loading ? 'center' : 'flex-start',
+              display: loading ? 'flex' : 'block',
+              justifyContent: 'center',
             }}
           >
-            <Box display="flex" gap={1.5} mb={2} alignItems="flex-end">
-              <TextField
-                label="Add a new task"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                fullWidth
-                variant="standard"
-                InputProps={{ style: { fontWeight: 500 } }}
-              />
-              <Button
-                variant="contained"
-                size="small"
-                sx={{
-                  backgroundColor: '#0d6efd',
-                  textTransform: 'none',
-                  minWidth: 100,
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  height: '30px',
-                  lineHeight: '1',
-                }}
-                onClick={handleAdd}
-              >
-                Add Todo
-              </Button>
-            </Box>
+            {loading ? (
+              <CircularProgress color="primary" />
+            ) : (
+              <>
+                <Box display="flex" gap={1.5} mb={2} alignItems="flex-end">
+                  <TextField
+                    label="Add a new task"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    fullWidth
+                    variant="standard"
+                    InputProps={{ style: { fontWeight: 500 } }}
+                  />
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      backgroundColor: '#0d6efd',
+                      textTransform: 'none',
+                      minWidth: 100,
+                      fontSize: '0.85rem',
+                      fontWeight: 500,
+                      height: '30px',
+                      lineHeight: '1',
+                    }}
+                    onClick={handleAdd}
+                  >
+                    Add Todo
+                  </Button>
+                </Box>
 
-            <Stack spacing={1.5}>
-              {todos.map((todo) => (
+                <Stack spacing={1.5}>
+                  {todos.map((todo) => (
+                    <Box
+                      key={todo.id}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      borderBottom="1px solid #ddd"
+                      pb={0.5}
+                    >
+                      <Box display="flex" alignItems="center">
+                        <Checkbox
+                          checked={todo.isDone}
+                          onChange={() => toggleDone(todo.id, todo.isDone)}
+                          size="small"
+                        />
+                        <Typography
+                          variant="body2"
+                          fontWeight={500}
+                          sx={{
+                            textDecoration: todo.isDone ? 'line-through' : 'none',
+                            color: todo.isDone ? 'gray' : '#000',
+                          }}
+                        >
+                          {todo.item}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        {todo.isDone ? (
+                          <CheckCircle sx={{ color: 'green', fontSize: 20 }} />
+                        ) : (
+                          <Cancel sx={{ color: 'red', fontSize: 20 }} />
+                        )}
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+
                 <Box
-                  key={todo.id}
+                  mt={3}
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
-                  borderBottom="1px solid #ddd"
-                  pb={0.5}
                 >
-                  <Box display="flex" alignItems="center">
-                    <Checkbox
-                      checked={todo.isDone}
-                      onChange={() => toggleDone(todo.id, todo.isDone)}
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: '#ff4d4f',
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      fontSize: '0.875rem',
+                      px: 2,
+                      py: 0.5,
+                      '&:hover': { backgroundColor: '#ff7875' },
+                    }}
+                    onClick={deleteSelected}
+                  >
+                    Delete Selected
+                  </Button>
+                  <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenSnackbar(false)}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  >
+                    <Alert
+                      onClose={() => setOpenSnackbar(false)}
+                      severity={snackbarSeverity}
+                      sx={{ width: '100%' }}
+                    >
+                      {snackbarMessage}
+                    </Alert>
+                  </Snackbar>
+
+                  {totalPages > 1 && (
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={(_, value) => setPage(value)}
+                      color="primary"
+                      shape="rounded"
                       size="small"
                     />
-                    <Typography
-                      variant="body2"
-                      fontWeight={500}
-                      sx={{
-                        textDecoration: todo.isDone ? 'line-through' : 'none',
-                        color: todo.isDone ? 'gray' : '#000',
-                      }}
-                    >
-                      {todo.item}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    {todo.isDone ? (
-                      <CheckCircle sx={{ color: 'green', fontSize: 20 }} />
-                    ) : (
-                      <Cancel sx={{ color: 'red', fontSize: 20 }} />
-                    )}
-                  </Box>
+                  )}
                 </Box>
-              ))}
-            </Stack>
-
-            <Box
-              mt={3}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: '#ff4d4f',
-                  textTransform: 'none',
-                  fontWeight: 500,
-                  fontSize: '0.875rem',
-                  px: 2,
-                  py: 0.5,
-                  '&:hover': { backgroundColor: '#ff7875' },
-                }}
-                onClick={deleteSelected}
-              >
-                Delete Selected
-              </Button>
-              <Snackbar
-                open={openSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSnackbar(false)}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              >
-                <Alert
-                  onClose={() => setOpenSnackbar(false)}
-                  severity={snackbarSeverity}
-                  sx={{ width: '100%' }}
-                >
-                  {snackbarMessage}
-                </Alert>
-              </Snackbar>
-
-              {totalPages > 1 && (
-                <Pagination
-                  count={totalPages}
-                  page={page}
-                  onChange={(_, value) => setPage(value)}
-                  color="primary"
-                  shape="rounded"
-                  size="small"
-                />
-              )}
-            </Box>
+              </>
+            )}
           </Paper>
         </Box>
       </Box>
