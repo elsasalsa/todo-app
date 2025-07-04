@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
     Box,
     Typography,
@@ -23,16 +24,11 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Fade from '@mui/material/Fade';
 import { getTodos, Todo } from '@/lib/api';
 import { jwtDecode } from 'jwt-decode';
-
-interface DecodedToken {
-    id: string;
-    fullName: string;
-    email: string;
-    role: string;
-    iat: number;
-}
+import { DecodedToken } from '@/types';
 
 export default function AdminPage() {
+    const router = useRouter();
+    const [authorized, setAuthorized] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -45,6 +41,32 @@ export default function AdminPage() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login first');
+            router.replace('/auth/login');
+            return;
+        }
+
+        try {
+            const decoded: DecodedToken = jwtDecode(token);
+            setUser(decoded);
+            setIsClient(true);
+            if (decoded.role !== 'ADMIN') {
+                alert('Access denied. This page is for admin only.');
+                router.replace('/todo/user');
+            } else {
+                setAuthorized(true);
+            }
+        } catch (err) {
+            alert('Invalid token. Please login again.');
+            console.error('Invalid token:', err);
+            router.replace('/auth/login');
+        }
+    }, [router]);
+
+
     const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -55,7 +77,7 @@ export default function AdminPage() {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        window.location.href = '/auth/login';
     };
 
     useEffect(() => {
@@ -101,7 +123,7 @@ export default function AdminPage() {
         setSearchKey(searchTerm.trim());
     };
 
-    if (!isClient) return null;
+    if (!isClient || !authorized) return null;
 
     return (
         <Box display="flex" height="100vh">

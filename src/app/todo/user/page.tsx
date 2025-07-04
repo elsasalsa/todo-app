@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import { useRouter } from 'next/navigation';
 import {
   Box,
   Button,
@@ -22,6 +23,7 @@ import {
 } from '@mui/material';
 import { Cancel, CheckCircle, Star } from '@mui/icons-material';
 import Fade from '@mui/material/Fade';
+import { DecodedToken, Todo } from '@/types';
 import {
   getTodos,
   createTodo,
@@ -29,25 +31,13 @@ import {
   deleteTodoById,
 } from '@/lib/api';
 
-interface Todo {
-  id: string;
-  item: string;
-  isDone: boolean;
-}
-
-interface DecodedToken {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  iat: number;
-}
-
-export default function TodoPage() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+export default function UserPage() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
   const [input, setInput] = useState('');
   const [token, setToken] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,9 +46,34 @@ export default function TodoPage() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'warning'>('success');
-
-
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    if (!savedToken) {
+      alert('Please login first');
+      router.replace('/auth/login');
+      return;
+    }
+
+    try {
+      const decoded: DecodedToken = jwtDecode(savedToken);
+      setUser(decoded);
+      setToken(savedToken);
+
+      if (decoded.role !== 'USER') {
+        alert('Access denied. This page is for user only.');
+        router.replace('/todo/admin');
+        return;
+      }
+
+      setAuthorized(true);
+    } catch (error) {
+      alert('Invalid token. Please login again.');
+      router.replace('/auth/login');
+    }
+  }, [router]);
+
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -81,7 +96,7 @@ export default function TodoPage() {
   };
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   };
 
   const fetchTodos = useCallback(async () => {
@@ -124,28 +139,28 @@ export default function TodoPage() {
   if (!isClient) return null;
 
   const handleAdd = async () => {
-  if (!input.trim()) {
-    setSnackbarMessage('Task cannot be empty!');
-    setSnackbarSeverity('warning');
-    setOpenSnackbar(true);
-    return;
-  }
+    if (!input.trim()) {
+      setSnackbarMessage('Task cannot be empty!');
+      setSnackbarSeverity('warning');
+      setOpenSnackbar(true);
+      return;
+    }
 
-  try {
-    await createTodo(input, token);
-    setInput('');
-    fetchTodos();
+    try {
+      await createTodo(input, token);
+      setInput('');
+      fetchTodos();
 
-    setSnackbarMessage('Todo added successfully!');
-    setSnackbarSeverity('success');
-    setOpenSnackbar(true);
-  } catch (error) {
-    console.error('Failed to add todo:', error);
-    setSnackbarMessage('Failed to add todo');
-    setSnackbarSeverity('error');
-    setOpenSnackbar(true);
-  }
-};
+      setSnackbarMessage('Todo added successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error('Failed to add todo:', error);
+      setSnackbarMessage('Failed to add todo');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
+  };
 
   const toggleDone = async (id: string, isDone: boolean) => {
     try {
@@ -186,6 +201,8 @@ export default function TodoPage() {
       setOpenSnackbar(true);
     }
   };
+  
+  if (!isClient || !authorized) return null;
 
   return (
     <Box

@@ -18,6 +18,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { login } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '@/types';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +33,18 @@ export default function LoginPage() {
     const token = localStorage.getItem('token');
     if (token) {
       toast('You are logged in!', { icon: 'ℹ️' });
-      router.replace('/todo');
+
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        if (decoded.role === 'ADMIN') {
+          router.replace('/todo/admin');
+        } else {
+          router.replace('/todo/user');
+        }
+      } catch (err) {
+        console.error('Invalid token');
+        router.replace('/auth/login');
+      }
     }
   }, [router]);
 
@@ -68,9 +81,9 @@ export default function LoginPage() {
 
       setTimeout(() => {
         if (role === 'admin') {
-          window.location.href = '/admin-page';
+          window.location.href = '/todo/admin';
         } else {
-          window.location.href = '/todo';
+          window.location.href = '/todo/user';
         }
       }, 1000);
 
@@ -151,7 +164,7 @@ export default function LoginPage() {
               }
               label="Remember me"
             />
-            <Link href="/forgot-password" underline="hover" variant="body2">
+            <Link href="/auth/forgot-password" underline="hover" variant="body2">
               Forgot password?
             </Link>
           </Box>
@@ -163,7 +176,7 @@ export default function LoginPage() {
           <Box textAlign="center" mt={3}>
             <Typography variant="body2">
               Don’t have an account?{' '}
-              <Link href="/register" underline="hover">
+              <Link href="/auth/register" underline="hover">
                 Sign up
               </Link>
             </Typography>

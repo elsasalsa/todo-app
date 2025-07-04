@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
           <Box textAlign="center" mt={3}>
             <Typography variant="body2">
               Remember your password?{' '}
-              <a href="/login" style={{ color: '#1976d2', textDecoration: 'none' }}>
+              <a href="/auth/login" style={{ color: '#1976d2', textDecoration: 'none' }}>
                 Back to Login
               </a>
             </Typography>

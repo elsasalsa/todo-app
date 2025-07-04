@@ -17,6 +17,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { register } from '@/lib/api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '@/types';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,7 +38,18 @@ export default function RegisterPage() {
     const token = localStorage.getItem('token');
     if (token) {
       toast('You are logged in!', { icon: 'ℹ️' });
-      router.replace('/todo');
+
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        if (decoded.role === 'ADMIN') {
+          router.replace('/todo/admin');
+        } else {
+          router.replace('/todo/user');
+        }
+      } catch (err) {
+        console.error('Invalid token');
+        router.replace('/auth/login');
+      }
     }
   }, [router]);
 
@@ -66,7 +79,7 @@ export default function RegisterPage() {
       await register(fullName, emailToSend, password);
       toast.success('Register success!');
       setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = '/auth/login';
       }, 1500);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -195,7 +208,7 @@ export default function RegisterPage() {
                 variant="outlined"
                 color="primary"
                 component={Link}
-                href="/login"
+                href="/auth/login"
               >
                 Login
               </Button>

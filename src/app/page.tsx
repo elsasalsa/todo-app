@@ -3,14 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
-
-interface DecodedToken {
-  id: string;
-  fullName: string;
-  email: string;
-  role: 'ADMIN' | 'USER';
-  iat: number;
-}
+import { DecodedToken } from '@/types';
 
 export default function Page() {
   const router = useRouter();
@@ -19,7 +12,7 @@ export default function Page() {
     const redirectUser = () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.replace('/login');
+        router.replace('/auth/login');
         return;
       }
 
@@ -29,17 +22,16 @@ export default function Page() {
 
 
         if (role === 'admin') {
-          router.replace('/admin-page');
+          router.replace('/todo/admin');
         } else {
-          router.replace('/todo');
+          router.replace('/todo/user');
         }
       } catch (error) {
         console.error('Invalid token', error);
-        router.replace('/login');
+        router.replace('/auth/login');
       }
     };
 
-    // Jalankan redirect setelah render pertama
     redirectUser();
   }, [router]);
 
