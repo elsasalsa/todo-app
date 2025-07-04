@@ -266,17 +266,32 @@ export default function AdminPage() {
                 </Box>
 
                 {/* Page Content */}
-                <Box px={4} py={3}>
-                    <Typography variant="h5" fontWeight={600}>
+                <Box px={{ xs: 3, sm: 4 }} py={3}>
+                    <Typography variant="h4" fontWeight={600} mb={2}>
                         To Do
                     </Typography>
 
-                    <Box component={Paper} elevation={0} sx={{ p: 3, borderRadius: 3 }}>
+                    <Box
+                        component={Paper}
+                        elevation={3}
+                        sx={{
+                            p: 2,
+                            borderRadius: 3,
+                            backgroundColor: '#ffffff',
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+                            border: '1px solid #e2e8f0',
+                            transition: '0.3s ease-in-out',
+                            '&:hover': {
+                                boxShadow: '0 6px 25px rgba(0, 0, 0, 0.08)',
+                            },
+                        }}
+                    >
                         <Box
                             display="flex"
-                            flexDirection={{ xs: 'column', sm: 'row' }}
+                            flexDirection="row"
+                            flexWrap="wrap"
                             mb={2}
-                            alignItems={{ xs: 'stretch', sm: 'flex-start' }}
+                            alignItems="flex-end"
                         >
                             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                 <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -288,9 +303,7 @@ export default function AdminPage() {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
-                                    sx={{
-                                        mr: 1
-                                    }}
+                                    sx={{ maxWidth: 150, mr: 1 }}
                                 />
                             </Box>
 
@@ -299,6 +312,7 @@ export default function AdminPage() {
                                 onClick={handleSearch}
                                 size="small"
                                 sx={{
+                                    mr: 3,
                                     px: 1.5,
                                     py: 0.3,
                                     fontSize: '0.85rem',
@@ -307,8 +321,6 @@ export default function AdminPage() {
                                     minWidth: 70,
                                     fontWeight: 500,
                                     height: '30px',
-                                    mt: 2,
-                                    mr: 1
                                 }}
                             >
                                 Search
@@ -321,7 +333,10 @@ export default function AdminPage() {
                                 label="Filter by Status"
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                sx={{ minWidth: 160, mr: 1, ml: 4 }}
+                                sx={{
+                                    minWidth: 150,
+                                    flexShrink: 0,
+                                }}
                                 InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
                             >
                                 <MenuItem value="">All</MenuItem>
@@ -330,8 +345,9 @@ export default function AdminPage() {
                             </TextField>
                         </Box>
 
-                        <TableContainer>
-                            <Table>
+
+                        <TableContainer sx={{ maxHeight: 275 }}>
+                            <Table stickyHeader>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>

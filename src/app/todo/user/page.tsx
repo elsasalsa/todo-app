@@ -345,7 +345,7 @@ export default function UserPage() {
           mt={4}
           px={2}
         >
-          <Typography variant="h4" fontWeight={700} color="#2a3c65" mb={1}>
+          <Typography variant="h4" fontWeight={700} color="#2a3c65" mb={1.5}>
             To Do
           </Typography>
 
