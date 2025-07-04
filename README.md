@@ -51,20 +51,6 @@ npm run dev
 Create a .env.local file and configure:
 NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 
-## 🖼️ Screenshots
-
-### 📝 Register Page
-![Register Page](https://raw.githubusercontent.com/elsasalsa/todo-app/main/screenshots/register.png)
-
-### 🔐 Login Page
-![Register Page](https://raw.githubusercontent.com/elsasalsa/todo-app/main/screenshots/login.png)
-
-### 🏠 User Todo Page
-![Register Page](https://raw.githubusercontent.com/elsasalsa/todo-app/main/screenshots/todo.png)
-
-### 🛠️ Admin Dashboard
-![Register Page](https://raw.githubusercontent.com/elsasalsa/todo-app/main/screenshots/admin.png)
-
 
 🔐 Admin Credentials (for demo)
 Email    : admin@nodewave.id

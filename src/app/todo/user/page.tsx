@@ -69,6 +69,7 @@ export default function UserPage() {
 
       setAuthorized(true);
     } catch (error) {
+      console.error('Token decoding failed:', error);
       alert('Invalid token. Please login again.');
       router.replace('/auth/login');
     }
@@ -201,7 +202,7 @@ export default function UserPage() {
       setOpenSnackbar(true);
     }
   };
-  
+
   if (!isClient || !authorized) return null;
 
   return (

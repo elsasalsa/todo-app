@@ -42,7 +42,7 @@ export default function LoginPage() {
           router.replace('/todo/user');
         }
       } catch (err) {
-        console.error('Invalid token');
+        console.error('Invalid token:', err);
         router.replace('/auth/login');
       }
     }
