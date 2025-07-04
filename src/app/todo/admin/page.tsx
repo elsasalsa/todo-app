@@ -180,7 +180,6 @@ export default function AdminPage() {
 
             {/* Main Content */}
             <Box flex={1} bgcolor="#f9fafb">
-                {/* Navbar */}
                 <Box
                     width="100%"
                     display="flex"
@@ -293,12 +292,13 @@ export default function AdminPage() {
                     >
                         <Box
                             display="flex"
-                            flexDirection="row"
+                            flexDirection={{ xs: 'column', sm: 'row' }}
                             flexWrap="wrap"
+                            gap={1.5}
                             mb={2}
-                            alignItems="flex-end"
+                            alignItems={{ xs: 'stretch', sm: 'flex-end' }}
                         >
-                            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <Box display="flex" alignItems="flex-end">
                                 <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                                 <TextField
                                     fullWidth
@@ -308,7 +308,7 @@ export default function AdminPage() {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
-                                    sx={{ maxWidth: 150, mr: 1 }}
+                                    sx={{ maxWidth: { xs: '100%', sm: 150 } }}
                                 />
                             </Box>
 
@@ -317,13 +317,10 @@ export default function AdminPage() {
                                 onClick={handleSearch}
                                 size="small"
                                 sx={{
-                                    mr: 3,
                                     px: 1.5,
                                     py: 0.3,
                                     fontSize: '0.85rem',
-                                    lineHeight: 1,
                                     textTransform: 'none',
-                                    minWidth: 70,
                                     fontWeight: 500,
                                     height: '30px',
                                 }}
@@ -339,8 +336,8 @@ export default function AdminPage() {
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
                                 sx={{
-                                    minWidth: 150,
-                                    flexShrink: 0,
+                                    minWidth: { xs: '100%', sm: 150 },
+                                    ml: { xs: 0, sm: 2.5 },
                                 }}
                                 InputLabelProps={{ sx: { fontSize: '0.88rem' } }}
                             >
@@ -349,7 +346,6 @@ export default function AdminPage() {
                                 <MenuItem value="Pending">Pending</MenuItem>
                             </TextField>
                         </Box>
-
 
                         <TableContainer sx={{ maxHeight: 275 }}>
                             <Table stickyHeader>
