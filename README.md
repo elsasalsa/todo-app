@@ -58,6 +58,7 @@ NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 ## 🔐 Admin Credentials (for Demo)
 
 Email    : admin@nodewave.id
+
 Password : admin123
 
 ## 🚀 Deployment
