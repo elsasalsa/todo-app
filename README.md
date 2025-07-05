@@ -4,7 +4,7 @@ This is a simple Todo Web Application built with **Next.js** and **TypeScript**,
 
 ## 🔗 Live Demo
 
-[https://todolistify-ruby.vercel.app]
+[https://todolistify-ruby.vercel.app](https://todolistify-ruby.vercel.app)
 
 ## 📁 Features
 
@@ -38,7 +38,7 @@ This is a simple Todo Web Application built with **Next.js** and **TypeScript**,
 
 ```bash
 # Clone the repository
-git clone [https://github.com/elsasalsa/todo-app.git]
+git clone https://github.com/elsasalsa/todo-app.git
 cd todo-app
 
 # Install dependencies
@@ -46,21 +46,28 @@ npm install
 
 # Run the development server
 npm run dev
+```
+## ⚙️ Environment Variables
 
-⚙️ Environment Variables
-Create a .env.local file and configure:
+Create a `.env.local` file and configure:
+
+```env
 NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
+```
 
+## 🔐 Admin Credentials (for Demo)
 
-🔐 Admin Credentials (for demo)
 Email    : admin@nodewave.id
 Password : admin123
 
-🚀 Deployment
+## 🚀 Deployment
+
 The app is deployed on Vercel:
 👉 https://todolistify-ruby.vercel.app
 
 👥 Collaborators
 The GitHub repo is private and invited users:
--rigenski
--rizqyep
+
+@rigenski
+
+@rizqyep
