@@ -47,10 +47,3 @@ npm install
 # Run the development server
 npm run dev
 ```
-## ⚙️ Environment Variables
-
-Create a `.env.local` file and configure:
-
-```env
-NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
-```
