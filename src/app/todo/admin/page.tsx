@@ -146,7 +146,7 @@ export default function AdminPage() {
                 >
                     <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                         <Typography fontWeight={700} fontSize={18} color="#4b5563">
-                            Nodewave
+                            TodoListify
                         </Typography>
                         <Button
                             size="small"
