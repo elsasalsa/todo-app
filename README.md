@@ -54,21 +54,3 @@ Create a `.env.local` file and configure:
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://fe-test-api.nwappservice.com
 ```
-
-## 🔐 Admin Credentials (for Demo)
-
-Email    : admin@nodewave.id
-
-Password : admin123
-
-## 🚀 Deployment
-
-The app is deployed on Vercel:
-👉 https://todolistify-ruby.vercel.app
-
-👥 Collaborators
-The GitHub repo is private and invited users:
-
-@rigenski
-
-@rizqyep
