@@ -1,4 +1,4 @@
-# 📝 TodoListify – Nodewave Front End Assessment
+# 📝 TodoListify
 
 This is a simple Todo Web Application built with **Next.js** and **TypeScript**, styled using **Material UI (MUI)**. The app connects with the public API provided by Nodewave and supports user authentication and todo management features.
 
